@@ -22,10 +22,11 @@ class Conversations(APIView):
             user_id = user.id
 
             conversations = (
-                Conversation.objects.filter(Q(user1=user_id) | Q(user2=user_id))
+                Conversation.objects.filter(
+                    Q(user1=user_id) | Q(user2=user_id))
                 .prefetch_related(
                     Prefetch(
-                        "messages", queryset=Message.objects.order_by("-createdAt")
+                        "messages", queryset=Message.objects.order_by("createdAt")
                     )
                 )
                 .all()
@@ -37,7 +38,8 @@ class Conversations(APIView):
                 convo_dict = {
                     "id": convo.id,
                     "messages": [
-                        message.to_dict(["id", "text", "senderId", "createdAt"])
+                        message.to_dict(
+                            ["id", "text", "senderId", "createdAt"])
                         for message in convo.messages.all()
                     ],
                 }
