@@ -1,12 +1,15 @@
+from online_users import online_users
+import socketio
+import os
 async_mode = None
 
-import os
-
-import socketio
-from online_users import online_users
 
 basedir = os.path.dirname(os.path.realpath(__file__))
-sio = socketio.Server(async_mode=async_mode, logger=False)
+# This was blocking the websocket connection on my local pc
+# sio = socketio.Server(async_mode=async_mode, logger=False)
+sio = socketio.Server(async_mode=async_mode, logger=True,
+                      cors_allowed_origins='*')
+
 thread = None
 
 
