@@ -39,3 +39,8 @@ def logout(sid, user_id):
     if user_id in online_users:
         online_users.remove(user_id)
     sio.emit("remove-offline-user", user_id, skip_sid=sid)
+
+
+@sio.on("mark-as-read")
+def mark_as_read(sid, data):
+    print(data)

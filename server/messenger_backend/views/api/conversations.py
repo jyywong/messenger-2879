@@ -39,13 +39,15 @@ class Conversations(APIView):
                     "id": convo.id,
                     "messages": [
                         message.to_dict(
-                            ["id", "text", "senderId", "createdAt"])
+                            ["id", "text", "senderId", "createdAt", "isRead", "isLastRead"])
                         for message in convo.messages.all()
                     ],
                 }
 
                 # set properties for notification count and latest message preview
                 # convo_dict["latestMessageText"] = convo_dict["messages"][0]["text"]
+                convo_dict["unreadMessages"] = convo.get_unread_messages_count(
+                    user_id)
                 convo_dict["latestMessageText"] = convo_dict["messages"][-1]["text"]
                 # set a property "otherUser" so that frontend will have easier access
                 user_fields = ["id", "username", "photoUrl"]
@@ -70,4 +72,24 @@ class Conversations(APIView):
                 safe=False,
             )
         except Exception as e:
+            return HttpResponse(status=500)
+
+    def post(self, request):
+        try:
+            user = get_user(request)
+
+            if user.is_anonymous:
+                return HttpResponse(status=401)
+
+            reader_id = request.data['reader']
+            target_conversation_id = request.data['conversation']
+
+            target_conversation = Conversation.objects.get(
+                id=target_conversation_id)
+            target_conversation.mark_all_current_unread_messages_as_read(
+                reader_id)
+            print(reader_id, target_conversation_id)
+
+        except Exception as e:
+            print(e)
             return HttpResponse(status=500)

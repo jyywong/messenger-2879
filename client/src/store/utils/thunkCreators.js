@@ -111,3 +111,17 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 		console.error(error);
 	}
 };
+
+// Read Receipts
+
+export const saveMessagesAsRead = async (body) => {
+	const { data } = await axios.post('/api/conversations', body);
+	return data;
+};
+
+export const markAllAsRead = (data) => {
+	socket.emit('mark-as-read', {
+		conversation: data.conversation,
+		reader: data.reader
+	});
+};

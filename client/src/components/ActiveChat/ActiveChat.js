@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 
 const ActiveChat = (props) => {
   const classes = useStyles();
-  const { user } = props;
+  const { user, activeConversationID } = props;
   const conversation = props.conversation || {};
 
   return (
@@ -30,6 +30,8 @@ const ActiveChat = (props) => {
       {conversation.otherUser && (
         <>
           <Header
+            user={user}
+            activeConversationID={activeConversationID}
             username={conversation.otherUser.username}
             online={conversation.otherUser.online || false}
           />
@@ -54,11 +56,13 @@ const ActiveChat = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    activeConversationID: state.activeConversation.conversationID,
     conversation:
       state.conversations &&
       state.conversations.find(
-        (conversation) => conversation.otherUser.username === state.activeConversation
-      )
+        (conversation) => conversation.otherUser.username === state.activeConversation.username
+      ),
+    
   };
 };
 
