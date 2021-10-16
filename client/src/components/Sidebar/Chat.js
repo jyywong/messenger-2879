@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
 	const classes = useStyles();
-	const { conversation } = props;
+	const { conversation, setActiveChat } = props;
 	const { otherUser } = conversation;
-	console.log('conversation', conversation);
 	const handleClick = async (conversation) => {
-		await props.setActiveChat(otherUser.username, conversation.id);
+		console.log('hello???');
+		await setActiveChat(otherUser.username, conversation.id);
 	};
 	const hasUnreadMessages = () => conversation.unreadMessages > 0;
 
