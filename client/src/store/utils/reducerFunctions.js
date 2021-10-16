@@ -23,6 +23,56 @@ export const addMessageToStore = (state, payload) => {
 	});
 };
 
+export const setNewLastReadToStore = (state, payload) => {
+	const { targetConversationID, newLastReadMessageID } = payload;
+	return state.map((convo) => {
+		if (convo.id === targetConversationID) {
+			const convoCopy = { ...convo };
+			// This forEach iterates through the messages and sets all message's isLastRead
+			// to false. After this happens, if the message is the newLastReadMessage, then
+			// that message's isLastRead is set to true. This ensures that there should
+			// only be one last read message (for each user) for each conversation.
+			convoCopy.messages.forEach((message) => {
+				if (message.isLastRead === true) {
+					message.isLastRead = false;
+				}
+				if (message.id === newLastReadMessageID) {
+					message.isLastRead = true;
+				}
+			});
+			return convoCopy;
+		} else {
+			return convo;
+		}
+	});
+};
+
+export const resetUnreadCountToStore = (state, payload) => {
+	const { targetConversationID } = payload;
+	return state.map((convo) => {
+		if (convo.id === targetConversationID) {
+			const convoCopy = { ...convo };
+			convoCopy.unreadMessages = 0;
+			return convoCopy;
+		} else {
+			return convo;
+		}
+	});
+};
+
+export const incrementUnreadCountToStore = (state, payload) => {
+	const { targetConversationID } = payload;
+	return state.map((convo) => {
+		if (convo.id === targetConversationID) {
+			const convoCopy = { ...convo };
+			convoCopy.unreadMessages += 1;
+			return convoCopy;
+		} else {
+			return convo;
+		}
+	});
+};
+
 export const addOnlineUserToStore = (state, id) => {
 	return state.map((convo) => {
 		if (convo.otherUser.id === id) {

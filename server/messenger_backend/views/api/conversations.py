@@ -1,4 +1,5 @@
 from django.contrib.auth.middleware import get_user
+from django.shortcuts import get_object_or_404
 from django.db.models import Max, Q
 from django.db.models.query import Prefetch
 from django.http import HttpResponse, JsonResponse
@@ -45,7 +46,6 @@ class Conversations(APIView):
                 }
 
                 # set properties for notification count and latest message preview
-                # convo_dict["latestMessageText"] = convo_dict["messages"][0]["text"]
                 convo_dict["unreadMessages"] = convo.get_unread_messages_count(
                     user_id)
                 convo_dict["latestMessageText"] = convo_dict["messages"][-1]["text"]
@@ -81,14 +81,15 @@ class Conversations(APIView):
             if user.is_anonymous:
                 return HttpResponse(status=401)
 
-            reader_id = request.data['reader']
+            reader_id = user.id
             target_conversation_id = request.data['conversation']
 
-            target_conversation = Conversation.objects.get(
-                id=target_conversation_id)
+            target_conversation = get_object_or_404(
+                Conversation, id=target_conversation_id)
             target_conversation.mark_all_current_unread_messages_as_read(
                 reader_id)
-            print(reader_id, target_conversation_id)
+
+            return HttpResponse(status=200)
 
         except Exception as e:
             print(e)

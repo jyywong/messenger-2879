@@ -1,4 +1,5 @@
 from online_users import online_users
+from messenger_backend.models import Conversation
 import socketio
 import os
 async_mode = None
@@ -43,4 +44,11 @@ def logout(sid, user_id):
 
 @sio.on("mark-as-read")
 def mark_as_read(sid, data):
-    print(data)
+    target_conversation = Conversation.objects.get(id=data['conversation'])
+    new_last_read_message = target_conversation.get_last_read_message(
+        data['reader'])
+
+    sio.emit("new-last-read", {
+        "targetConversation": target_conversation.id,
+        "newLastReadMessageID": new_last_read_message.id
+    }, skip_sid=sid)

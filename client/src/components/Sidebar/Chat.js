@@ -24,10 +24,11 @@ const Chat = (props) => {
 	const classes = useStyles();
 	const { conversation } = props;
 	const { otherUser } = conversation;
-
+	console.log('conversation', conversation);
 	const handleClick = async (conversation) => {
 		await props.setActiveChat(otherUser.username, conversation.id);
 	};
+	const hasUnreadMessages = () => conversation.unreadMessages > 0;
 
 	return (
 		<Box onClick={() => handleClick(conversation)} className={classes.root}>
@@ -37,10 +38,8 @@ const Chat = (props) => {
 				online={otherUser.online}
 				sidebar={true}
 			/>
-			<ChatContent conversation={conversation} />
-			{conversation.unreadMessages > 0 && (
-				<Chip label={conversation.unreadMessages} size="small" color="primary" />
-			)}
+			<ChatContent hasUnreadMessages={hasUnreadMessages} conversation={conversation} />
+			{hasUnreadMessages() && <Chip label={conversation.unreadMessages} size="small" color="primary" />}
 		</Box>
 	);
 };

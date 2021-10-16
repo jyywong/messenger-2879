@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Typography, Button } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { markAllAsRead, saveMessagesAsRead } from '../../store/utils/thunkCreators';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -48,12 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = (props) => {
 	const classes = useStyles();
-	const { user, username, online, activeConversationID } = props;
-	const onMarkAsRead = () => {
-		console.log('hello', activeConversationID);
-		// markAllAsRead({ conversation: activeConversationID, reader: user.id });
-		saveMessagesAsRead({ conversation: activeConversationID, reader: user.id });
-	};
+	const { username, online } = props;
 
 	return (
 		<Box className={classes.root}>
@@ -61,9 +55,6 @@ const Header = (props) => {
 				<Typography className={classes.username}>{username}</Typography>
 				<Box className={`${classes.statusDot} ${classes[online && 'online']}`} />
 				<Typography className={classes.statusText}>{online ? 'Online' : 'Offline'}</Typography>
-				<Button variant="outlined" onClick={onMarkAsRead}>
-					Mark all as read
-				</Button>
 			</Box>
 			<MoreHorizIcon classes={{ root: classes.ellipsis }} />
 		</Box>
