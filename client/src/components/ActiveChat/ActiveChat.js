@@ -33,14 +33,16 @@ const ActiveChat = (props) => {
 	// conversation to 0.
 	useEffect(
 		() => {
-			const hasMessagesNotSentByUser =
+			const activeConversationHasMessagesNotSentByUser =
 				typeof conversation.messages !== 'undefined'
 					? conversation.messages.some((message) => {
 							return message.senderId !== user.id;
 						})
 					: false;
-
-			if (activeConversationID !== null && hasMessagesNotSentByUser) {
+			// We only need to update the read status and unread count if there IS an active conversation
+			// AND the conversation has any messages not sent by the current user. There would be no point
+			// in updating the read status, if the conversation only had messages sent by the current user.
+			if (activeConversationID !== null && activeConversationHasMessagesNotSentByUser) {
 				updateReadStatus({ conversation: activeConversationID, reader: user.id });
 				zeroUnreadCount(activeConversationID);
 			}
