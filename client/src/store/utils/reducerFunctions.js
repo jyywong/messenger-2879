@@ -65,7 +65,7 @@ export const incrementUnreadCountToStore = (state, payload) => {
 	return state.map((convo) => {
 		if (convo.id === targetConversationID) {
 			const convoCopy = { ...convo };
-			convoCopy.unreadMessages += 1;
+			convoCopy.unreadMessages = (convoCopy.unreadMessages ?? 0) + 1
 			return convoCopy;
 		} else {
 			return convo;

@@ -22,21 +22,22 @@ socket.on('connect', () => {
 		store.dispatch(removeOfflineUser(id));
 	});
 	socket.on('new-message', (data) => {
-		const userConversations = store.getState().conversations;
 		const activeConvoId = store.getState().activeConversation.conversationID;
 		const currentUserId = store.getState().user.id;
 
 		const incomingMessageConversationId = data.message.conversationId;
+
+		store.dispatch(setNewMessage(data.message, data.sender));
+
+		// This variable is defined here AFTER the dispatch so we can get the conversation
+		// array with the new conversation of the new message added
+		const userConversations = store.getState().conversations;
+
+		// If the conversation that the new message belongs to is not the active
+		// conversation, then we can increment the unread count of that convo by 1.
 		userConversations.forEach((conversation) => {
-			// Checks if the received new message is in one of the user's conversations.
-			// If so, then we fire off the state change for the new message.
-			// If the conversation that the new message belongs to is not the active
-			// conversation, then we can increment the unread count of that convo by 1.
-			if (conversation.id === incomingMessageConversationId) {
-				store.dispatch(setNewMessage(data.message, data.sender));
-				if (activeConvoId !== incomingMessageConversationId) {
-					store.dispatch(incrementUnreadCount(incomingMessageConversationId));
-				}
+			if (conversation.id === incomingMessageConversationId && activeConvoId !== incomingMessageConversationId) {
+				store.dispatch(incrementUnreadCount(incomingMessageConversationId));
 			}
 		});
 		// We update the read status of the conversation whenever we get a new message
