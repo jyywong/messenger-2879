@@ -35,7 +35,7 @@ const ChatContent = (props) => {
 		<Box className={classes.root}>
 			<Box>
 				<Typography className={classes.username}>{otherUser.username}</Typography>
-				<Typography className={hasUnreadMessages() ? classes.previewTextBold : classes.previewText}>
+				<Typography className={hasUnreadMessages ? classes.previewTextBold : classes.previewText}>
 					{latestMessageText}
 				</Typography>
 			</Box>

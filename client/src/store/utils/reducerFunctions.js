@@ -28,12 +28,9 @@ export const setNewLastReadToStore = (state, payload) => {
 	return state.map((convo) => {
 		if (convo.id === targetConversationID) {
 			const convoCopy = { ...convo };
-			// This forEach iterates through the messages and sets all message's isLastRead
-			// to false. After this happens, if the message is the newLastReadMessage, then
-			// that message's isLastRead is set to true. This ensures that there should
-			// only be one last read message (for each user) for each conversation.
+
 			convoCopy.messages.forEach((message) => {
-				if (message.isLastRead === true) {
+				if (message.isLastRead) {
 					message.isLastRead = false;
 				}
 				if (message.id === newLastReadMessageID) {

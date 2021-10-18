@@ -74,22 +74,21 @@ class Conversations(APIView):
         except Exception as e:
             return HttpResponse(status=500)
 
-    def post(self, request):
+    def patch(self, request):
         try:
             user = get_user(request)
-
-            if user.is_anonymous:
-                return HttpResponse(status=401)
-
             reader_id = user.id
             target_conversation_id = request.data['conversation']
-
             target_conversation = get_object_or_404(
                 Conversation, id=target_conversation_id)
+
+            if user.is_anonymous or not target_conversation.user_is_part_of_conversation(reader_id):
+                return HttpResponse(status=401)
+
             target_conversation.mark_all_current_unread_messages_as_read(
                 reader_id)
 
-            return HttpResponse(status=200)
+            return HttpResponse(status=204)
 
         except Exception as e:
             print(e)

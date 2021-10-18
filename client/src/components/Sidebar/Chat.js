@@ -27,7 +27,7 @@ const Chat = (props) => {
 	const handleClick = async (conversation) => {
 		await setActiveChat(otherUser.username, conversation.id);
 	};
-	const hasUnreadMessages = () => conversation.unreadMessages > 0;
+	const hasUnreadMessages = conversation.unreadMessages > 0;
 
 	return (
 		<Box onClick={() => handleClick(conversation)} className={classes.root}>
@@ -38,7 +38,7 @@ const Chat = (props) => {
 				sidebar={true}
 			/>
 			<ChatContent hasUnreadMessages={hasUnreadMessages} conversation={conversation} />
-			{hasUnreadMessages() && <Chip label={conversation.unreadMessages} size="small" color="primary" />}
+			{hasUnreadMessages && <Chip label={conversation.unreadMessages} size="small" color="primary" />}
 		</Box>
 	);
 };

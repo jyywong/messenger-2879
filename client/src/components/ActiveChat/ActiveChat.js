@@ -27,21 +27,14 @@ const ActiveChat = (props) => {
 	const { user, activeConversationID, zeroUnreadCount } = props;
 	const conversation = props.conversation || {};
 
-	// Everytime a new active conversation is selected (I consider this as opening a chat
-	// and thus reading all messages) I update the read status which lets both the database
-	// and the other user know of the newly read messages. I also reset the unread count of this
-	// conversation to 0.
+
 	useEffect(
 		() => {
-			const activeConversationHasMessagesNotSentByUser =
-				typeof conversation.messages !== 'undefined'
-					? conversation.messages.some((message) => {
-							return message.senderId !== user.id;
-						})
-					: false;
-			// We only need to update the read status and unread count if there IS an active conversation
-			// AND the conversation has any messages not sent by the current user. There would be no point
-			// in updating the read status, if the conversation only had messages sent by the current user.
+
+			const activeConversationHasMessagesNotSentByUser = conversation.messages?.some(
+				message => message.senderId !== user.id
+				) ?? false; 
+
 			if (activeConversationID !== null && activeConversationHasMessagesNotSentByUser) {
 				updateReadStatus({ conversation: activeConversationID, reader: user.id });
 				zeroUnreadCount(activeConversationID);
@@ -53,7 +46,7 @@ const ActiveChat = (props) => {
 	return (
 		<Box className={classes.root}>
 			{conversation.otherUser && (
-				<React.Fragment>
+				<>
 					<Header
 						username={conversation.otherUser.username}
 						online={conversation.otherUser.online || false}
@@ -66,7 +59,7 @@ const ActiveChat = (props) => {
 						/>
 						<Input otherUser={conversation.otherUser} conversationId={conversation.id} user={user} />
 					</Box>
-				</React.Fragment>
+				</>
 			)}
 		</Box>
 	);

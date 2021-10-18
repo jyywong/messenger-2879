@@ -107,12 +107,10 @@ const reducer = (state = [], action) => {
 			return resetUnreadCountToStore(state, action.payload);
 		case INCREMENT_UNREAD_COUNT:
 			return incrementUnreadCountToStore(state, action.payload);
-		case ADD_ONLINE_USER: {
+		case ADD_ONLINE_USER:
 			return addOnlineUserToStore(state, action.id);
-		}
-		case REMOVE_OFFLINE_USER: {
+		case REMOVE_OFFLINE_USER:
 			return removeOfflineUserFromStore(state, action.id);
-		}
 		case SET_SEARCHED_USERS:
 			return addSearchedUsersToStore(state, action.users);
 		case CLEAR_SEARCHED_USERS:
