@@ -81,14 +81,3 @@ class Conversation(utils.CustomModel):
         new_last_read_message = unread_messages.last()
         if new_last_read_message:
             new_last_read_message.isLastRead = True
-
-        # for index, unread_message in enumerate(unread_messages):
-        #     unread_message.isRead = True
-        #     if index == len(unread_messages) - 1:
-        #         last_read_message = self.get_last_read_message(readerId)
-        #         if last_read_message:
-        #             last_read_message.isLastRead = False
-        #             last_read_message.save()
-
-        #         unread_message.isLastRead = True
-        #     unread_message.save()

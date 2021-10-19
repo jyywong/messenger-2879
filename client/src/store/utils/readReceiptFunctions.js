@@ -23,7 +23,6 @@ export const signalNewLastReadMessageToOtherUser = (data) => {
 export const updateReadStatus = async (data) => {
 	try {
 		await saveNewMessagesAsRead(data);
-		console.log('does it reach here?');
 		signalNewLastReadMessageToOtherUser(data);
 	} catch (error) {
 		console.log(error);
