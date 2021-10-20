@@ -6,9 +6,6 @@ import socket from '../../socket';
 // for them because none of these functions affect the store directly.
 
 export const saveNewMessagesAsRead = async (body) => {
-	// If succesful, the API endpoint returns just an HTTP 200
-	// so we don't need to capture the response.
-	// await axios.patch('/api/conversations', body);
 	await axios.patch('/api/conversations', body);
 };
 
