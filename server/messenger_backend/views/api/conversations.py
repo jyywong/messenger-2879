@@ -1,4 +1,5 @@
 from django.contrib.auth.middleware import get_user
+from django.shortcuts import get_object_or_404
 from django.db.models import Max, Q
 from django.db.models.query import Prefetch
 from django.http import HttpResponse, JsonResponse
@@ -39,13 +40,14 @@ class Conversations(APIView):
                     "id": convo.id,
                     "messages": [
                         message.to_dict(
-                            ["id", "text", "senderId", "createdAt"])
+                            ["id", "text", "senderId", "createdAt", "isRead", "isLastRead"])
                         for message in convo.messages.all()
                     ],
                 }
 
                 # set properties for notification count and latest message preview
-                # convo_dict["latestMessageText"] = convo_dict["messages"][0]["text"]
+                convo_dict["unreadMessages"] = convo.get_unread_messages_count(
+                    user_id)
                 convo_dict["latestMessageText"] = convo_dict["messages"][-1]["text"]
                 # set a property "otherUser" so that frontend will have easier access
                 user_fields = ["id", "username", "photoUrl"]
@@ -70,4 +72,24 @@ class Conversations(APIView):
                 safe=False,
             )
         except Exception as e:
+            return HttpResponse(status=500)
+
+    def patch(self, request):
+        try:
+            user = get_user(request)
+            reader_id = user.id
+            target_conversation_id = request.data['conversation']
+            target_conversation = get_object_or_404(
+                Conversation, id=target_conversation_id)
+
+            if user.is_anonymous or not target_conversation.user_is_part_of_conversation(reader_id):
+                return HttpResponse(status=401)
+
+            target_conversation.mark_all_current_unread_messages_as_read(
+                reader_id)
+
+            return HttpResponse(status=204)
+
+        except Exception as e:
+            print(e)
             return HttpResponse(status=500)
